@@ -1,0 +1,5 @@
+fuzzywuzzy
+requests
+tqdm
+unidecode
+git+git://github.com/ucancallmealicia/utilities
