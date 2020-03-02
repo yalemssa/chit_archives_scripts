@@ -33,4 +33,5 @@ LEFT JOIN note on note.agent_person_id = ap.id
 WHERE np.is_display_name IS NOT NULL
 #excludes user records
 AND user.id IS NULL
+AND ap.publish = 0
 #any way to just exclude Fortunoff records??
