@@ -32,7 +32,7 @@ position | The position of the archival object under the immediate parent | 1680
 There are several ways to access record "trees" which provide additional information about relationships among a collection's component records.
 
 Description | Endpoint | Endpoint Example | Output Example
---- | --- | ---
+--- | --- | --- | ---
 Get a resource tree | /repositories/:repo_id/resources/:id/tree | /repositories/12/resources/4556/tree | [Example JSON](mssa_ms_0466_tree.json)
 Fetch tree information for an Archival Object record within a tree | /repositories/:repo_id/resources/:id/tree/node | /repositories/12/resources/4556/tree/node?node_uri=/repositories/12/archival_objects/1749901 | [Example JSON](mssa_ms_0466_tree_node.json)
 Fetch tree paths from the root record to Archival Objects | /repositories/:repo_id/resources/:id/tree/node_from_root | /repositories/12/resources/4556/tree/node_from_root?node_ids[]=1749914 |[Example JSON](mssa_ms_0466_tree_node_from_root.json)
