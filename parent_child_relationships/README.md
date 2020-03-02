@@ -34,7 +34,7 @@ Field | Description | Example
 There are several ways to access record "trees" which provide additional information about relationships among a collection's component records.
 
 Description | Endpoint/Endpoint Example | Output Example
---- | --- | --- | ---
+--- | --- | ---
 __Get a resource tree__: Retrieves the entire hierarchy for a resource. | `/repositories/:repo_id/resources/:id/tree`, `/repositories/12/resources/4556/tree` | [Example JSON](mssa_ms_0466_tree.json)
 __Fetch tree information for an Archival Object record within a tree__: Retrieves info about all of the immediate children of a given archival object. | `/repositories/:repo_id/resources/:id/tree/node`, `/repositories/12/resources/4556/tree/node?node_uri=/repositories/12/archival_objects/1749901` | [Example JSON](mssa_ms_0466_tree_node.json)
 __Fetch tree paths from the root record to Archival Objects__: Retrieves info about all of the ancestors of a given archival object| `/repositories/:repo_id/resources/:id/tree/node_from_root`, `/repositories/12/resources/4556/tree/node_from_root?node_ids[]=1749914` |[Example JSON](mssa_ms_0466_tree_node_from_root.json)
