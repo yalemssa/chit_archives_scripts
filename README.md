@@ -2,6 +2,10 @@
 
 Repo to store CHIT-related work on archival and manuscript metadata reconciliation
 
+## Requirements
+
+* [`utilities`](https://github.com/ucancallmealicia/utilities) package for file processing and http utilities
+
 ## Survey
 
 ### Metadata schemas and controlled vocabularies for agents and subjects currently in use by YUL special collections and BRBL
