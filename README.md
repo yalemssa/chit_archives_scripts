@@ -95,6 +95,7 @@ Preliminary task list:
 * Cleanup of agent and subject records in ArchivesSpace
 * De-duplication - should this happen before or after reconciliation. Or both?
 * Planning for storage of additional URIs - no way in ArchivesSpace to store more than one
+* Compare and remediate differences between ArchivesSpace and Voyager agent and subject records
 
 ## Reports from ArchivesSpace
 
@@ -137,4 +138,3 @@ Preliminary task list:
 * [Extracting info from Wikidata responses, 1](https://stackoverflow.com/questions/38906932/how-to-programmatically-get-all-available-information-from-a-wikidata-entity)
 * [Extracting info from Wikidata responses, 2](https://stackoverflow.com/questions/31266398/getting-readable-results-from-wikidata/31290824
 )
-

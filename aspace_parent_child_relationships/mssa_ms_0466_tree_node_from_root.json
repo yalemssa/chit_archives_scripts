@@ -1,0 +1,28 @@
+{
+    "1749914": [
+        {
+            "jsonmodel_type": "resource",
+            "node": null,
+            "offset": 0,
+            "parsed_title": "Edward Mandell House papers",
+            "root_record_uri": "/repositories/12/resources/4556",
+            "title": "Edward Mandell House papers"
+        },
+        {
+            "jsonmodel_type": "archival_object",
+            "node": "/repositories/12/archival_objects/1749901",
+            "offset": 0,
+            "parsed_title": "Writings, 1912-1938",
+            "root_record_uri": "/repositories/12/resources/4556",
+            "title": "Writings, 1912-1938"
+        },
+        {
+            "jsonmodel_type": "archival_object",
+            "node": "/repositories/12/archival_objects/1749912",
+            "offset": 0,
+            "parsed_title": "B. Forwards, Prefaces, etc. (in chronological order)",
+            "root_record_uri": "/repositories/12/resources/4556",
+            "title": "B. Forwards, Prefaces, etc. (in chronological order)"
+        }
+    ]
+}
