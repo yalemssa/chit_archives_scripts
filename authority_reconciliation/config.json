@@ -3,6 +3,8 @@
 	"api_password": "your_password",
 	"wikidata_user_agent": "chit-wikidata-request-script/0.0.1",
 	"wikidata_user_agent_email": "alicia.detelich@yale.edu",
-	"input_csv": "data/agents_people_no_auth_id_for_wikidata_query_results_21619_2020-07-01T11.22.09_out.csv",
-	"output_csv": "data/agents_people_no_auth_id_for_wikidata_query_results_21619_2020-07-01T11.22.09_out_out.csv",
+	"input_csv": "data/all_personal_names_prod.csv",
+	"output_csv": "data/all_personal_names_matches_only.csv",
+	"output_csv_2": "data/all_personal_names_full_match.csv",
+	"output_csv_3": "data/all_personal_names_dupes_filtered.csv",
 	"backup_directory": "test_archivesspace_backup"}

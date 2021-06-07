@@ -9,16 +9,26 @@ from fuzzywuzzy import fuzz
 import requests
 from tqdm import tqdm
 
+from utilities import utilities as u
+
 
 @dataclass
 class AgentData():
     '''Creates an agent object from a CSV row'''
-    __slots__ = ['agent_uri', 'name_concat', 'authority_id', 'dates', 'source', 'entity_id']
+    __slots__ = ['agent_uri', 'agent_aay_url', 'name_concat', 'authority_id', 'dates', 'source', 'resource_ids',
+                    'archival_object_ids', 'accession_ids', 'digital_object_ids', 'event_ids', 'create_time', 'entity_id']
     agent_uri: str
+    agent_aay_url: str
     name_concat: str
     authority_id: str
     dates: str
     source: str
+    resource_ids: str
+    archival_object_ids: str
+    accession_ids: str
+    digital_object_ids: str
+    event_ids: str
+    create_time: str
     entity_id: str
 
     def property_id(self):
@@ -93,7 +103,7 @@ class ConfigData():
 
     def row_count(self):
         '''Returns a count of rows in a CSV file, minus the header row'''
-        return sum(1 for line in open(self.input_csv).readlines()) - 1
+        return len([row for row in u.opencsv(self.input_csv)[1]])
 
     def header_row(self):
         '''Returns the header row of the input CSV as a list'''
@@ -107,7 +117,9 @@ def setup_session(config_data):
 
 def generate_agents(cnfg):
     '''This returns a list of a bunch of data objects representing the agents in a CSV file'''
-    return (AgentData(row['agent_uri'], row['name_concat'], row['authority_id'], row['dates'], row['source'], row['wikidata_uri'])
+    return (AgentData(row['agent_uri'], row['agent_aay_url'], row['name_concat'], row['authority_id'], row['dates'], row['source'],
+                        row['resource_ids'], row['archival_object_ids'], row['accession_ids'], row['digital_object_ids'], row['event_ids'], 
+                        row['create_time'], row['entity_id'])
                     for row in cnfg.open_input_csv())
 
 def get_query_string(agent_data, search_type):
@@ -158,9 +170,16 @@ def write_name_results(json_result, agent_data, csv_outfile):
     '''Make two spreadsheets - one for under 94 one for 95 and up'''
     new_rows = [[str(len(json_values.items())), 
                 ratio_num,
-                agent_data.agent_uri, 
+                agent_data.agent_uri,
+                agent_data.agent_aay_url,
                 agent_data.name_concat, 
                 agent_data.dates, 
+                agent_data.resource_ids,
+                agent_data.archival_object_ids,
+                agent_data.accession_ids,
+                agent_data.digital_object_ids,
+                agent_data.event_ids,
+                agent_data.create_time,
                 key] + value
                 for json_values in json_result.values()
                 for key, value in json_values.items()
@@ -209,7 +228,7 @@ def get_csv_headers(search_type):
     if search_type in ('ENTITY', 'ID'):
         return ['agent_uri', 'name_concat', 'dates', 'wikidata_uri', 'viaf_id', 'lcnaf_id', 'snac_id', 'ulan_id']
     elif search_type == 'NAME':
-        return ['num_matches', 'match_score', 'agent_uri', 'name_concat', 'dates', 'wikidata_uri', 'wikidata_label', 'wikidata_dob', 'wikidata_dod', 'authority_id', 'source']
+        return ['num_matches', 'match_score', 'agent_uri', 'aay_url', 'name_concat', 'dates', 'wikidata_uri', 'wikidata_label', 'wikidata_dob', 'wikidata_dod', 'authority_id', 'source']
 
 def main():
     try:
