@@ -39,4 +39,5 @@ WHERE np.is_display_name is not null
 AND user.id is NULL
 AND (resource.repo_id is null or resource.repo_id != 14)) as aglinks
 WHERE name_concat is NOT NULL
+AND sort_name not like '%$%'
 GROUP BY aglinks.agent_uri
