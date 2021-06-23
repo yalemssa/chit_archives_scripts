@@ -2,14 +2,16 @@ SELECT DISTINCT agent_uri
     , agent_aay_url
     , name_concat
     , sort_name
-    , dates
-    , begin
-    , end
     , authority_id
-    , GROUP_CONCAT(resource_ids) as resource_ids
-    , GROUP_CONCAT(archival_object_ids) as archival_object_ids
-    , GROUP_CONCAT(accession_ids) as accesssion_ids
-    , publish
+    , dates
+    , source
+    , GROUP_CONCAT(resource_ids SEPARATOR '--- ') as resource_ids
+    , GROUP_CONCAT(archival_object_ids SEPARATOR '--- ') as archival_object_ids
+    , GROUP_CONCAT(accession_ids SEPARATOR '--- ') as accession_ids
+    , '' as digital_object_ids
+    , '' as event_ids
+    , create_time
+    , '' as entity_id
 FROM (SELECT DISTINCT CONCAT('/agents/people/', ap.id) as agent_uri
     , CONCAT('https://archives.yale.edu/agents/people/', ap.id) as agent_aay_url
     , replace(CONCAT(np.rest_of_name, ' ' , np.primary_name), '&', 'and') as name_concat
@@ -24,6 +26,8 @@ FROM (SELECT DISTINCT CONCAT('/agents/people/', ap.id) as agent_uri
     #these are not - what to do?
     , CONCAT(replace(accession.title, '"', "'"), ': ' , 'https://archivesspace.library.yale.edu/accessions/', lar.accession_id, ' (', accession.repo_id, ')') as accession_ids
     , ap.publish as publish
+    , ap.create_time as create_time
+    , ev.value as source
 FROM linked_agents_rlshp lar
 #this will only retrieve agent_person links to resources
 LEFT JOIN resource on resource.id = lar.resource_id

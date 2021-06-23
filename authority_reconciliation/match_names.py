@@ -1,8 +1,11 @@
 #/usr/bin/python3
 
+from collections import defaultdict
 import json
 import pandas as pd
 from string_grouper import match_strings
+import csv
+
 
 def remove_subfields(dataset):
 	new_dataset = dataset[dataset['sort_name_left'].str.contains('\$') == False]
@@ -24,8 +27,14 @@ def regroup_data(dataset, subset):
 	full_set = right_set.join(dataset, on='right_index', how='left', rsuffix='_right', lsuffix='_left')
 	return full_set
 
-def main():
-	cfg = json.load(open('config.json', 'r', encoding='utf-8'))
+def merge_datasets(cfg):
+	dataset_1 = pd.read_csv(cfg['input_csv'])
+	dataset_2 = pd.read_csv(cfg['input_csv_1'])
+	new_set = pd.merge(dataset_1, dataset_2, how='left', on='index')
+	new_set.to_csv(cfg['output_csv'])
+
+
+def dupes_from_as(cfg):
 	column_to_match = 'name_concat'
 	dataset = pd.read_csv(cfg['input_csv'])
 	matches = match_strings(dataset[column_to_match])
@@ -39,10 +48,37 @@ def main():
 	dropped_subfields = remove_subfields(dropped_dupes)
 	dropped_subfields.to_csv(cfg['output_csv_4'], index=False)
 
+def dupes_from_wikidata(cfg):
+	wikidata_sublist = prep_wikidata_sublist(cfg)
+	for key, value in wikidata_sublist.items():
+		master_match = pd.DataFrame([key], columns=['agent_uri', 'name_concat'])
+		master_match.set_index('agent_uri', inplace=True)
+		dupe_match = pd.DataFrame(value, columns=['index', 'num_matches', 'agent_uri', 'aay_url', 'name_concat', 'sort_name', 'dates', 'resources', 'archival_objects', 'accessions', 'authority_id', 'source', 'create_time', 'wikidata_uri', 'wikidata_name', 'wikidata_begin', 'wikidata_end'])
+		dupe_match.set_index('index', inplace=True)
+		matches = match_strings(master_match['name_concat'], dupe_match['wikidata_name'])
+		matches.to_csv(cfg.get('output_csv'), mode='a', header=False, index=False)
+
+def prep_wikidata_sublist(cfg):
+	sublist = defaultdict(list)
+	with open(cfg.get('input_csv'), 'r', encoding='utf8') as infile:
+		csvfile = csv.reader(infile)
+		for row in csvfile:
+			# the key is a tuple with the URI and matched name
+			sublist[(row[2], row[4])].append(row)
+	return sublist
+
+
+def main():
+	cfg = json.load(open('config.json', 'r', encoding='utf-8'))
+	merge_datasets(cfg)
+	#dupes_from_wikidata(cfg)
+
+
+
+
 
 if __name__ == "__main__":
 	main()
-
 
 
 '''

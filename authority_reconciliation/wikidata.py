@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import json
 import traceback
 
-from fuzzywuzzy import fuzz
+# from fuzzywuzzy import fuzz
 import requests
 from tqdm import tqdm
 
@@ -15,11 +15,12 @@ from utilities import utilities as u
 @dataclass
 class AgentData():
     '''Creates an agent object from a CSV row'''
-    __slots__ = ['agent_uri', 'agent_aay_url', 'name_concat', 'authority_id', 'dates', 'source', 'resource_ids',
+    __slots__ = ['agent_uri', 'agent_aay_url', 'name_concat', 'sort_name', 'authority_id', 'dates', 'source', 'resource_ids',
                     'archival_object_ids', 'accession_ids', 'digital_object_ids', 'event_ids', 'create_time', 'entity_id']
     agent_uri: str
     agent_aay_url: str
     name_concat: str
+    sort_name: str
     authority_id: str
     dates: str
     source: str
@@ -117,7 +118,7 @@ def setup_session(config_data):
 
 def generate_agents(cnfg):
     '''This returns a list of a bunch of data objects representing the agents in a CSV file'''
-    return (AgentData(row['agent_uri'], row['agent_aay_url'], row['name_concat'], row['authority_id'], row['dates'], row['source'],
+    return (AgentData(row['agent_uri'], row['agent_aay_url'], row['name_concat'], row['sort_name'], row['authority_id'], row['dates'], row['source'],
                         row['resource_ids'], row['archival_object_ids'], row['accession_ids'], row['digital_object_ids'], row['event_ids'], 
                         row['create_time'], row['entity_id'])
                     for row in cnfg.open_input_csv())
@@ -166,13 +167,36 @@ def process_results(json_result, agent_data, search_type):
     else:
         return {agent_data.authority_id: {'NO_RESULT': [json_result]}}
 
+# def write_name_results(json_result, agent_data, csv_outfile):
+#     '''Make two spreadsheets - one for under 94 one for 95 and up'''
+#     new_rows = [[str(len(json_values.items())), 
+#                 ratio_num,
+#                 agent_data.agent_uri,
+#                 agent_data.agent_aay_url,
+#                 agent_data.name_concat, 
+#                 agent_data.dates, 
+#                 agent_data.resource_ids,
+#                 agent_data.archival_object_ids,
+#                 agent_data.accession_ids,
+#                 agent_data.digital_object_ids,
+#                 agent_data.event_ids,
+#                 agent_data.create_time,
+#                 key] + value
+#                 for json_values in json_result.values()
+#                 for key, value in json_values.items()
+#                 # if (ratio_num := fuzz.ratio(agent_data.name_concat, value[0])) > 94
+#                 #     ]
+#                 if (ratio_num)
+#                 ]
+#     csv_outfile.writerows(new_rows)
+
 def write_name_results(json_result, agent_data, csv_outfile):
-    '''Make two spreadsheets - one for under 94 one for 95 and up'''
-    new_rows = [[str(len(json_values.items())), 
-                ratio_num,
+    new_rows = [[
+                str(len(json_values.items())), 
                 agent_data.agent_uri,
                 agent_data.agent_aay_url,
-                agent_data.name_concat, 
+                agent_data.name_concat,
+                agent_data.sort_name, 
                 agent_data.dates, 
                 agent_data.resource_ids,
                 agent_data.archival_object_ids,
@@ -183,9 +207,8 @@ def write_name_results(json_result, agent_data, csv_outfile):
                 key] + value
                 for json_values in json_result.values()
                 for key, value in json_values.items()
-                if (ratio_num := fuzz.ratio(agent_data.name_concat, value[0])) > 94
-                    ]
-    csv_outfile.writerows(new_rows)
+                ]
+    csv_outfile.writerows(new_rows) 
 
 def filter_authorities(json_result, id_types):
     '''Takes the larger dictionary of authority identifiers and filters out for VIAF, LCNAF, SNAC, and ULAN'''
@@ -218,6 +241,7 @@ def lookup_agents(row_total, session_data, agent_data, csv_outfile):
     search_type = input('Enter NAME, ID, or ENTITY to select your query: ')
     csv_outfile.writerow(get_csv_headers(search_type))
     with tqdm(total=row_total) as prog_bar:
+        #threading here?
         for agent in agent_data:
             prog_bar.update(1)
             query_results = run_query(session_data, agent, search_type)

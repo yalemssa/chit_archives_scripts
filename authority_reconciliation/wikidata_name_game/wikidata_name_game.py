@@ -51,6 +51,8 @@ def format_base_agent(valuedict):
     [color(5)]Full name[/color(5)]: [color(11)]{valuedict['sort_name']}[/color(11)]
     [color(5)]Life dates[/color(5)]: [color(11)]{valuedict['dates']}[/color(11)]
     [color(5)]Archives at Yale URL[/color(5)]: [color(32)]{valuedict['aay_url']}[/color(32)]
+    [color(5)]ArchivesSpace Staff URL[/color(5)]: 
+        [color(32)]{valuedict['aay_url'].replace('archives.yale.edu/agents/people/', 'archivesspace.library.yale.edu/agents/agent_person/')}[/color(32)]
     [color(5)]Collection links[/color(5)]: 
         {format_links(valuedict['resources'])}
     [color(5)]Component links[/color(5)]: 
@@ -74,9 +76,11 @@ def question(values, header_row, number_of_matches):
 
 def answer(values, key):
     # console.print("[bold][color(168)]Enter the number of the[/bold][/color(168)]")
-    answ = Prompt.ask("[bold][color(11)]Enter the number of the Wikidata name which matches the source name. Enter 0 if there is no match. Enter Q to quit[/color(11)][/bold]", choices=['0', '1', '2', '3', '4', '5', 'Q'])
+    answ = Prompt.ask("[bold][color(11)]Enter the number of the Wikidata name which matches the source name. Enter 0 if there is no match. Enter M if unsure. Enter Q to quit[/color(11)][/bold]", choices=['0', '1', '2', '3', '4', '5', 'Q'])
     if answ == '0':
         return [key, 'NO MATCH']
+    if answ == 'M':
+        return [key, 'REVIEW']
     if answ in ('1', '2', '3', '4', '5'):
         selection = values[int(answ) - 1]
         return selection
