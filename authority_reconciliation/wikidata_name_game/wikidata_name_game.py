@@ -76,7 +76,7 @@ def question(values, header_row, number_of_matches):
 
 def answer(values, key):
     # console.print("[bold][color(168)]Enter the number of the[/bold][/color(168)]")
-    answ = Prompt.ask("[bold][color(11)]Enter the number of the Wikidata name which matches the source name. Enter 0 if there is no match. Enter M if unsure. Enter Q to quit[/color(11)][/bold]", choices=['0', '1', '2', '3', '4', '5', 'Q'])
+    answ = Prompt.ask("[bold][color(11)]Enter the number of the Wikidata name which matches the source name. Enter 0 if there is no match. Enter M if unsure. Enter Q to quit[/color(11)][/bold]", choices=['0', '1', '2', '3', '4', '5', 'M', 'Q'])
     if answ == '0':
         return [key, 'NO MATCH']
     if answ == 'M':
