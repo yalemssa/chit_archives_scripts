@@ -1,6 +1,6 @@
-# aspace_templates
+# aspace_record_examples 
 
-Templates and sample records to facilitate ArchivesSpace > Lux data transformation
+Sample records to facilitate ArchivesSpace > Lux data transformation
 
 ## Record types to map
 
